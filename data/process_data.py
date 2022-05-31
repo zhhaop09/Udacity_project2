@@ -6,6 +6,10 @@ def load_data(messages_filepath, categories_filepath):
     messages = pd.read_csv(f'{messages_filepath}')
     categories = pd.read_csv(f'{categories_filepath}')
     df = pd.merge(messages, categories, on = 'id', how = 'left')
+    return df
+
+
+def clean_data(df):
     categories = df['categories'].str.split(";",expand=True)
     row = categories.loc[1,:]
     a = []
@@ -20,12 +24,7 @@ def load_data(messages_filepath, categories_filepath):
     df = pd.concat([df, categories.reindex(df.index)], axis=1)
     df = df.drop_duplicates()
     return df
-
-
-def clean_data(df):
-    return df
    
-
 
 def save_data(df, database_filename):
     engine = sqlalchemy.create_engine(f'sqlite:///{database_filename}')
