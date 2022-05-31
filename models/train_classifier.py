@@ -48,20 +48,20 @@ def tokenize(text):
     return clean_tokens
 
 
-def build_model(X, y):
+def build_model():
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
      ('mocf', MultiOutputClassifier(RandomForestClassifier()))])
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
-    model = pipeline.fit(X_train, y_train)
-    return model
+    return pipeline
 
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    y_test = model.predict(X_test)
-    # classification_report(y_test.values[:,i], y_pred[:,i], target_names= ['Y', 'N']))
+    y_pred = model.predict(X_test)
+    for i in range(len(category_names)):
+        print(category_names[i])
+        print(classification_report(Y_test.values[:,i], y_pred[:,i]))
 
 
 def save_model(model, model_filepath):
@@ -76,7 +76,7 @@ def main():
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
         
         print('Building model...')
-        model = build_model(X, Y)
+        model = build_model()
         
         print('Training model...')
         model.fit(X_train, Y_train)
