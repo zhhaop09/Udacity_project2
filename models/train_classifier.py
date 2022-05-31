@@ -22,6 +22,20 @@ from sklearn.ensemble import RandomForestClassifier
 import pickle
 
 def load_data(database_filepath):
+    
+    '''
+    load data
+    Load data from database
+    
+    Input: 
+    database_filepath: filepath to database
+    
+    Output:
+    X: variables
+    y: labels
+    y.columns: category_names 
+    '''
+   
     engine = create_engine(f'sqlite:///{database_filepath}')
     df = pd.read_sql_table('messagedata', engine)
     X = df['message']
@@ -37,6 +51,17 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    '''
+    tokenize
+    Tokenize text 
+    
+    Input: 
+    text: text to tokenize
+    
+    Output:
+    clean_tokens : cleaned tockens
+    '''
+        
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -49,6 +74,14 @@ def tokenize(text):
 
 
 def build_model():
+    '''
+    build_model
+    build a ml pipeline 
+  
+    Output:
+    pipeline : ML pipeline 
+    '''
+        
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -58,6 +91,19 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''
+    evaluate_model
+    evaluate a ml pipeline 
+   
+    Input:
+    model: ml model
+    X_test: testing set variables
+    Y_test: testing set labels 
+    category_names: name of the category 
+    
+    Output:
+    print the classification report for each category 
+    '''
     y_pred = model.predict(X_test)
     for i in range(len(category_names)):
         print(category_names[i])
@@ -65,6 +111,15 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    '''
+    save_model
+    save a ml model to pickle file
+   
+    Input:
+    model: ml model
+    model_filepath: filepath to ml model 
+    
+    '''
     pickle.dump(model, open('models/classifier.pkl', 'wb'))
 
 
