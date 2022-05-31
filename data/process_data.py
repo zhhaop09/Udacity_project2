@@ -3,6 +3,17 @@ import pandas as pd
 import sqlalchemy 
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    load data 
+    Load data and merge into a single dataframe
+    
+    Input:
+    messages_filepath: filepath to messages csv file
+    categories_filepath: filepath to categories csv file
+    
+    Output:
+    df: dataframe combining messages and categories data
+    '''
     messages = pd.read_csv(f'{messages_filepath}')
     categories = pd.read_csv(f'{categories_filepath}')
     df = pd.merge(messages, categories, on = 'id', how = 'left')
@@ -10,6 +21,16 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''
+    clean data 
+    Clean data and get ready for ml
+    
+    Input:
+    df: original dataframe
+    
+    Output:
+    df: cleaned dataframe(renamed the columns, transformed the data, and dropped the repeated rows) 
+    '''
     categories = df['categories'].str.split(";",expand=True)
     row = categories.loc[1,:]
     a = []
@@ -27,8 +48,16 @@ def clean_data(df):
    
 
 def save_data(df, database_filename):
+    '''
+    save data 
+    Save data to database
+    
+    Input:
+    df: dataframe
+    database_filename: filepath to database
+    '''
     engine = sqlalchemy.create_engine(f'sqlite:///{database_filename}')
-    df.to_sql('messagedata', engine, index=False)
+    df.to_sql('messagedata', engine, index=False, if_exists='replace')
 
 
 def main():
