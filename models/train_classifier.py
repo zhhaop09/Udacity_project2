@@ -6,6 +6,7 @@ import re
 import numpy as np
 import pandas as pd
 from nltk.tokenize import word_tokenize
+from sklearn.neighbors import KNeighborsClassifier
 from nltk.stem import WordNetLemmatizer
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
@@ -86,6 +87,12 @@ def build_model():
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
      ('mocf', MultiOutputClassifier(RandomForestClassifier()))])
+    
+    parameters = {
+        'mocf__estimator': [RandomForestClassifier(), KNeighborsClassifier()]
+    }
+    
+    cv = GridSearchCV(pipeline, param_grid=parameters, verbose=3)
     return pipeline
 
 
