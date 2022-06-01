@@ -39,7 +39,7 @@ def clean_data(df):
     category_colnames = a
     categories.columns = category_colnames
     for column in categories:
-        categories[column] = categories[column].apply(lambda x: int(x[-1]))
+        categories[column] = categories[column].apply(lambda x: 1 if int(x[-1]) >0 else 0)   
         
     df =df.drop(['categories'], axis = 1)
     df = pd.concat([df, categories.reindex(df.index)], axis=1)
