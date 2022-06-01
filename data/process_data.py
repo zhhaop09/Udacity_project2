@@ -43,8 +43,7 @@ def clean_data(df):
         
     df =df.drop(['categories'], axis = 1)
     df = pd.concat([df, categories.reindex(df.index)], axis=1)
-    df = df.drop_duplicates()
-    df.drop(['storm'], axis=1, inplace = True) # drop the nonbinary values
+    df = df.drop_duplicates(）
     return df
    
 
