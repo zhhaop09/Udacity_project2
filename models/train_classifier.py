@@ -93,7 +93,7 @@ def build_model():
     }
     
     cv = GridSearchCV(pipeline, param_grid=parameters, verbose=3)
-    return pipeline
+    return cv
 
 
 
